@@ -37,7 +37,7 @@
   <ItemGroup>
     <Compile Include="CommonLibrary.cs" />
     <Compile Include="Option.cs" />
-    <Compile Include="OptionModule.cs" />
+    <Compile Include="OptionExtensions.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultExtensions.cs" />

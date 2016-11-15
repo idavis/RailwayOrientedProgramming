@@ -1,6 +1,5 @@
 ﻿using System;
 using Xunit;
-using static Rop.OptionModule;
 
 namespace Rop.OptionModuleTests
 {
@@ -87,7 +86,7 @@ namespace Rop.OptionModuleTests
         {
             var expected = 0;
             var option = Option<int>.None;
-            var actual = FoldBack(SeededAdd, option, 0);
+            var actual = option.FoldBack(SeededAdd, 0);
             Assert.Equal(expected, actual);
         }
 
@@ -96,7 +95,7 @@ namespace Rop.OptionModuleTests
         {
             var expected = 12;
             var option = Option<int>.Some(7);
-            var actual = FoldBack(SeededAdd, option, 5);
+            var actual = option.FoldBack(SeededAdd, 5);
             Assert.Equal(expected, actual);
         }
     }
@@ -107,7 +106,7 @@ namespace Rop.OptionModuleTests
         public void ExistsReturnsFalseForEmptyOptions()
         {
             var option = Option<int>.None;
-            var actual = Exists(_ => true, option);
+            var actual = option.Exists(_ => true);
             Assert.False(actual);
         }
 
@@ -115,7 +114,7 @@ namespace Rop.OptionModuleTests
         public void ExistsReturnsFalseForOptionsThatSatisfyThePredicate()
         {
             var option = Option<int>.Some(7);
-            var actual = Exists(x => x % 2 == 0, option);
+            var actual = option.Exists(x => x % 2 == 0);
             Assert.False(actual);
         }
 
@@ -123,7 +122,7 @@ namespace Rop.OptionModuleTests
         public void ExistsReturnsTrueForOptionsThatSatisfyThePredicate()
         {
             var option = Option<int>.Some(7);
-            var actual = Exists(x => x % 2 == 1, option);
+            var actual = option.Exists(x => x % 2 == 1);
             Assert.True(actual);
         }
     }
@@ -134,7 +133,7 @@ namespace Rop.OptionModuleTests
         public void ForAllReturnsFalseForEmptyOptions()
         {
             var option = Option<int>.None;
-            var actual = ForAll(_ => true, option);
+            var actual = option.ForAll(_ => true);
             Assert.True(actual);
         }
 
@@ -142,7 +141,7 @@ namespace Rop.OptionModuleTests
         public void ForAllReturnsFalseForOptionsThatSatisfyThePredicate()
         {
             var option = Option<int>.Some(7);
-            var actual = ForAll(x => x % 2 == 0, option);
+            var actual = option.ForAll(x => x % 2 == 0);
             Assert.False(actual);
         }
 
@@ -150,7 +149,7 @@ namespace Rop.OptionModuleTests
         public void ForAllReturnsTrueForOptionsThatSatisfyThePredicate()
         {
             var option = Option<int>.Some(7);
-            var actual = ForAll(x => x % 2 == 1, option);
+            var actual = option.ForAll(x => x % 2 == 1);
             Assert.True(actual);
         }
     }
@@ -162,7 +161,7 @@ namespace Rop.OptionModuleTests
         {
             var wasCalled = false;
             Action<int> action = _ => wasCalled = true;
-            Iterate(action, Option<int>.None);
+            Option<int>.None.Iterate(action);
             Assert.False(wasCalled);
         }
 
@@ -176,7 +175,7 @@ namespace Rop.OptionModuleTests
                 captured = _;
                 wasCalled = true;
             };
-            Iterate(action, Option<int>.Some(5));
+            Option<int>.Some(5).Iterate(action);
             Assert.True(wasCalled);
             Assert.Equal(5, captured);
         }

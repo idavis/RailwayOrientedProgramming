@@ -63,12 +63,12 @@ namespace Rop
             if (this is Success)
             {
                 var success = this as Success;
-                return string.Format("Success[{0}]", success.Item);
+                return string.Format("Success[{0}]", success.Value);
             }
             else
             {
                 var failure = this as Failure;
-                return string.Format("Failure[{0}]", failure.Item);
+                return string.Format("Failure[{0}]", failure.Value);
             }
         }
 
@@ -81,9 +81,9 @@ namespace Rop
             if (num1 != num2)
                 return num1 - num2;
             if (this is Success)
-                return Comparer<TSuccess>.Default.Compare(((Success)this).item, ((Success)obj).item);
+                return Comparer<TSuccess>.Default.Compare(((Success)this)._Value, ((Success)obj)._Value);
 
-            return Comparer<TFailure>.Default.Compare(((Failure)this).item, ((Failure)obj).item);
+            return Comparer<TFailure>.Default.Compare(((Failure)this)._Value, ((Failure)obj)._Value);
         }
 
         public virtual int CompareTo(object obj)
@@ -104,11 +104,11 @@ namespace Rop
             {
                 Success success1 = (Success)this;
                 Success success2 = (Success)result;
-                return comp.Compare(success1.item, success2.item);
+                return comp.Compare(success1._Value, success2._Value);
             }
             Failure failure1 = (Failure)this;
             Failure failure2 = (Failure)result;
-            return comp.Compare(failure1.item, failure2.item);
+            return comp.Compare(failure1._Value, failure2._Value);
         }
 
         public virtual int GetHashCode(IEqualityComparer comp)
@@ -117,11 +117,11 @@ namespace Rop
             {
                 Success success = (Success)this;
                 int num = 0;
-                return comp.GetHashCode(success.item) + ((num << 6) + (num >> 2)) - 1640531527;
+                return comp.GetHashCode(success._Value) + ((num << 6) + (num >> 2)) - 1640531527;
             }
             Failure failure = (Failure)this;
             int num1 = 1;
-            return comp.GetHashCode(failure.item) + ((num1 << 6) + (num1 >> 2)) - 1640531527;
+            return comp.GetHashCode(failure._Value) + ((num1 << 6) + (num1 >> 2)) - 1640531527;
         }
 
         public sealed override int GetHashCode()
@@ -144,11 +144,11 @@ namespace Rop
             {
                 Success success1 = (Success)this;
                 Success success2 = (Success)result2;
-                return comp.Equals(success1.item, success2.item);
+                return comp.Equals(success1._Value, success2._Value);
             }
             Failure failure1 = (Failure)this;
             Failure failure2 = (Failure)result2;
-            return comp.Equals(failure1.item, failure2.item);
+            return comp.Equals(failure1._Value, failure2._Value);
         }
 
         public virtual bool Equals(Result<TSuccess, TFailure> obj)
@@ -158,8 +158,8 @@ namespace Rop
                 (!(obj is Failure) ? 0 : 1))
                 return false;
             if (this is Success)
-                return EqualityComparer<TSuccess>.Default.Equals(((Success)this).item, ((Success)obj).item);
-            return EqualityComparer<TFailure>.Default.Equals(((Failure)this).item, ((Failure)obj).item);
+                return EqualityComparer<TSuccess>.Default.Equals(((Success)this)._Value, ((Success)obj)._Value);
+            return EqualityComparer<TFailure>.Default.Equals(((Failure)this)._Value, ((Failure)obj)._Value);
         }
 
         public sealed override bool Equals(object obj)
@@ -182,20 +182,20 @@ namespace Rop
         public class Success : Result<TSuccess, TFailure>
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            internal readonly TSuccess item;
+            internal readonly TSuccess _Value;
 
             [DebuggerNonUserCode]
-            public TSuccess Item
+            public TSuccess Value
             {
                 [DebuggerNonUserCode]
-                get { return item; }
+                get { return _Value; }
             }
 
             [DebuggerStepThrough]
             [DebuggerNonUserCode]
-            internal Success(TSuccess item)
+            internal Success(TSuccess value)
             {
-                this.item = item;
+                _Value = value;
             }
         }
 
@@ -205,60 +205,60 @@ namespace Rop
         public class Failure : Result<TSuccess, TFailure>
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            internal readonly TFailure item;
+            internal readonly TFailure _Value;
 
             [DebuggerNonUserCode]
-            public TFailure Item
+            public TFailure Value
             {
                 [DebuggerNonUserCode]
-                get { return item; }
+                get { return _Value; }
             }
 
             [DebuggerStepThrough]
             [DebuggerNonUserCode]
-            internal Failure(TFailure item)
+            internal Failure(TFailure value)
             {
-                this.item = item;
+                _Value = value;
             }
         }
 
         internal class SuccessDebugTypeProxy
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            internal Success _obj;
+            internal Success _Success;
 
             [DebuggerNonUserCode]
-            public TSuccess Item
+            public TSuccess Value
             {
                 [DebuggerNonUserCode]
-                get { return _obj.item; }
+                get { return _Success._Value; }
             }
 
             [DebuggerStepThrough]
             [DebuggerNonUserCode]
-            public SuccessDebugTypeProxy(Success obj)
+            public SuccessDebugTypeProxy(Success success)
             {
-                _obj = obj;
+                _Success = success;
             }
         }
 
         internal class FailureDebugTypeProxy
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            internal Failure _obj;
+            internal Failure _Failure;
 
             [DebuggerNonUserCode]
-            public TFailure Item
+            public TFailure Value
             {
                 [DebuggerNonUserCode]
-                get { return _obj.item; }
+                get { return _Failure._Value; }
             }
 
             [DebuggerStepThrough]
             [DebuggerNonUserCode]
-            public FailureDebugTypeProxy(Failure obj)
+            public FailureDebugTypeProxy(Failure failure)
             {
-                _obj = obj;
+                _Failure = failure;
             }
         }
     }

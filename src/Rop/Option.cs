@@ -30,6 +30,10 @@ namespace Rop
 
         public static implicit operator Option<T>(T value)
         {
+            if(typeof(T).IsValueType)
+                return Some(value);
+            if (ReferenceEquals(value, null))
+                return None;
             return Some(value);
         }
 
@@ -141,7 +145,11 @@ namespace Rop
 
         public int CompareTo(object obj)
         {
+#if USESTRUCT
+            return CompareTo((Option<T>)obj);
+#else
             return CompareTo(obj as Option<T>);
+#endif
         }
 
         public int CompareTo(Option<T> other)
@@ -153,7 +161,11 @@ namespace Rop
 
         public int CompareTo(object other, IComparer comparer)
         {
+#if USESTRUCT
+            var otherOption = (Option<T>)other;
+#else
             var otherOption = other as Option<T>;
+#endif
             if (otherOption == default(Option<T>))
                 return 1;
             return comparer.Compare(Value, otherOption.Value);
